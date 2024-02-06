@@ -1,18 +1,22 @@
-FROM debian:stable-slim
+FROM	debian:stable-slim
 
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y nginx openssl curl vim
+RUN		apt-get update -y && apt-get upgrade -y
+RUN		apt-get install -y nginx openssl vim man
 
-RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/nginx.conf
+WORKDIR	/etc/nginx
 
-WORKDIR /etc/nginx
+RUN     mkdir ssl
 
-COPY conf.d/* conf.d
+RUN     openssl req -x509 -trustout -sha256 -days 356 -nodes -newkey rsa:2048 -subj "/CN=esalim.42.fr/C=MA/L=Tetouan" -keyout ssl/server.key -out ssl/server.crt
 
-COPY nginx.conf .
+RUN		rm -rf conf.d/* sites-enabled/*
 
-COPY gamestore /usr/share/nginx/html
+COPY	conf/conf.d conf.d
+COPY	conf/sites-enabled sites-enabled
 
-EXPOSE 443
+COPY	anime /usr/share/nginx/html
+
+EXPOSE	443
+EXPOSE	80
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
