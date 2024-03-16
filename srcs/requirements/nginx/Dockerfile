@@ -17,6 +17,6 @@ COPY	conf/sites-enabled sites-enabled
 COPY	anime /usr/share/nginx/html
 
 EXPOSE	443
-EXPOSE	80
+EXPOSE	8080
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

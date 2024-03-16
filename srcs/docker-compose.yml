@@ -5,7 +5,6 @@ services:
     container_name: nginx
     build:
       context: requirements/nginx
-      dockerfile: Dockerfile      
     ports:
       - 443:443
       - 80:80
@@ -13,4 +12,3 @@ services:
     volumes:
       - /home/esalim/Inception/srcs/requirements/nginx/conf/conf.d:/etc/nginx/conf.d
       - /home/esalim/Inception/srcs/requirements/nginx/conf/sites-enabled:/etc/nginx/sites-enabled
-    
