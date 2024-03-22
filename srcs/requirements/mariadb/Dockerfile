@@ -4,4 +4,10 @@ RUN     apt-get update -y && apt-get upgrade -y
 
 RUN     apt-get install -y mariadb-server
 
-CMD     [ "yes" ]
+RUN     service mariadb start
+
+COPY    conf/mysql	/var/lib/mysql
+
+COPY	tools/*		/
+
+ENTRYPOINT [ "sh", "docker-entrypoint-initdb.sh" ]
