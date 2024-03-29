@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:latest
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_TCP_PORT: 3310
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    ports:
+      - "3310:3310"
+    networks:
+      - wordpress_demo
+
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - ./wordpress_data:/var/www/html
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3310
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    ports:
+      - "8001:80"
+    depends_on:
+      - db
+    networks:
+      - wordpress_demo
+
+networks:
+  wordpress_demo:
+    driver: bridge
+volumes:
+  db_data:
+  phpmyadmin_data:
+  wordpress_data:
