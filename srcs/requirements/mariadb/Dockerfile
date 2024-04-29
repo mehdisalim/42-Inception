@@ -1,31 +1,28 @@
-# FROM debian:stable-slim
+FROM debian:stable-slim
 
-RUN     apt-get update
-RUN     apt-get install -y mariadb-server
+RUN apt-get update && apt-get upgrade
+RUN apt-get install -y mariadb-server
 
-EXPOSE  3306
+RUN mkdir -p /var/run/mysqld
+RUN mkdir -p /var/lib/mysqld
 
-LABEL   version="1.0"
-LABEL   description="MariaDB Server"
-
-HEALTHCHECK --start-period=5m \
-  CMD mariadb -e 'SELECT @@datadir;' || exit 202
-
-CMD ["mariadbd"]
+RUN chmod 777 /var /var/run /var/run/mysqld /run/mysqld /var/lib/mysql
 
 
-
-# FROM    debian:stable-slim
-
-# RUN     apt-get update -y && apt-get upgrade -y
-
-# RUN     apt-get install -y mariadb-server
-
-# COPY    conf/mysql	/var/lib/mysql
-
-# COPY	tools/*		/
+ENV MYSQL_ADMIN_PASSWORD=wordpress
+ENV MYSQL_DATABASE=wordpress
+ENV MYSQL_USER_NAME=wordpress
+ENV MYSQL_USER_PASSWORD=wordpress
 
 
-# ENTRYPOINT [ "sh", "docker-entrypoint-initdb.sh" ]
+COPY ./tools/docker-entrypoint-initdb.sh /
 
-# # CMD     [ "yes" ]
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db
+
+RUN chmod +x /docker-entrypoint-initdb.sh
+
+EXPOSE 3306
+
+ENTRYPOINT ["sh", "/docker-entrypoint-initdb.sh"]
+
+CMD ["mariadbd", "--user=mysql", "--bind-address=0.0.0.0"]

@@ -12,11 +12,9 @@ RUN     openssl req -x509 -trustout -sha256 -days 356 -nodes -newkey rsa:2048 -s
 RUN		rm -rf conf.d/* sites-enabled/*
 
 COPY	conf/conf.d conf.d
+
 COPY	conf/sites-enabled sites-enabled
 
-COPY	anime /usr/share/nginx/html
-
 EXPOSE	443
-EXPOSE	8080
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

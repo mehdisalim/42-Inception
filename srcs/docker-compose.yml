@@ -1,12 +1,20 @@
 version: "3.8"
 
 services:
-  mariadb:
-    image: mariadb_v1
+  nginx:
+    container_name: nginx_v1
     build:
-      context: requirements/mariadb
+      context: requirements/nginx
+    ports:
+      - 443:443
+    restart: always
+    networks:
+      - inception-networks
+
+  db:
+    image: mariadb:latest
     volumes:
-      - ./requirements/mariadb/conf/mysql:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_TCP_PORT: 3310
@@ -17,7 +25,7 @@ services:
     ports:
       - "3310:3310"
     networks:
-      - wordpress_demo
+      - inception-networks
 
   wordpress:
     image: wordpress:latest
@@ -25,37 +33,13 @@ services:
       - ./wordpress_data:/var/www/html
     restart: always
     environment:
-      WORDPRESS_DB_HOST: mariadb:3310
+      WORDPRESS_DB_HOST: db:3310
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
     ports:
       - "8001:80"
     depends_on:
-      - mariadb
+      - db
     networks:
-      - wordpress_demo
-
-networks:
-  wordpress_demo:
-    driver: bridge
-
-volumes:
-  requirements/mariadb/conf/mysql:
-  phpmyadmin_data:
-  wordpress_data:
-
-
-
-
-
-  # nginx:
-  #   container_name: nginx_v1
-  #   build:
-  #     context: requirements/nginx
-  #   ports:
-  #     - 443:443
-  #   restart: always
-  #   volumes:
-  #     - /home/esalim/Inception/srcs/requirements/nginx/conf/conf.d:/etc/nginx/conf.d
-  #     - /home/esalim/Inception/srcs/requirements/nginx/conf/sites-enabled:/etc/nginx/sites-enabled
+      - inception-networks
