@@ -1,0 +1,26 @@
+FROM    debian:stable-slim
+
+RUN     apt-get update -y && apt-get upgrade -y
+RUN     apt-get install -y curl wget mariadb-client php8.2 php-fpm php-cli php8.2-fpm php-mysql php-mbstring php-xml
+
+RUN     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN     chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
+
+RUN     mkdir -p /run/php
+RUN     mkdir -p /var/www/html/wordpress
+RUN     sed -i "s|listen = /run/php/php8.2-fpm.sock|listen = 0.0.0.0:9000|g" /etc/php/8.2/fpm/pool.d/www.conf
+
+EXPOSE  9000
+
+COPY    tools/docker-entrypoint-initdb.sh /
+
+ENV MYSQL_ADMIN_PASSWORD=wordpress
+ENV MYSQL_DATABASE=wordpress
+ENV MYSQL_USER_NAME=wordpress
+ENV MYSQL_USER_PASSWORD=wordpress
+
+ENTRYPOINT [ "sh", "/docker-entrypoint-initdb.sh" ]
+
+CMD     ["php-fpm8.2", "-f"]
+
+# CMD     ["yes"]

@@ -1,45 +1,53 @@
 version: "3.8"
 
 services:
-  nginx:
-    container_name: nginx_v1
-    build:
-      context: requirements/nginx
-    ports:
-      - 443:443
-    restart: always
-    networks:
-      - inception-networks
+  # nginx:
+  #   container_name: nginx_v1
+  #   build:
+  #     context: requirements/nginx
+  #   ports:
+  #     - 443:443
+  #   restart: always
+  #   networks:
+  #     - inception-networks
 
-  db:
-    image: mariadb:latest
-    volumes:
-      - ./db_data:/var/lib/mysql
+  mariadb:
+    container_name: mariadb
+    build:
+      context: requirements/mariadb
     restart: always
     environment:
-      MYSQL_TCP_PORT: 3310
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3306
+      MYSQL_ROOT_PASSWORD: wordpress
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
     ports:
-      - "3310:3310"
+      - "3306:3306"
     networks:
       - inception-networks
 
   wordpress:
-    image: wordpress:latest
-    volumes:
-      - ./wordpress_data:/var/www/html
+    container_name: wordpress
+    build:
+      context: requirements/wordpress
     restart: always
+    volumes:
+      - ./wordpress_data:/var/www/html/wordpress
     environment:
-      WORDPRESS_DB_HOST: db:3310
+      WORDPRESS_DB_HOST: mariadb:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
     ports:
-      - "8001:80"
+      - "9000:9000"
     depends_on:
-      - db
+      - mariadb
     networks:
       - inception-networks
+
+networks:
+  inception-networks:
+
+volumes:
+  wordpress:

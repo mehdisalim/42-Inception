@@ -13,8 +13,6 @@ RUN		rm -rf conf.d/* sites-enabled/*
 
 COPY	conf/conf.d conf.d
 
-COPY	conf/sites-enabled sites-enabled
-
 EXPOSE	443
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
