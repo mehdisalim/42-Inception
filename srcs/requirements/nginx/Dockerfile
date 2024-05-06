@@ -11,7 +11,7 @@ RUN     openssl req -x509 -trustout -sha256 -days 356 -nodes -newkey rsa:2048 -s
 
 RUN		rm -rf conf.d/* sites-enabled/*
 
-COPY	conf/conf.d conf.d
+COPY	conf/* conf.d
 
 EXPOSE	443
 

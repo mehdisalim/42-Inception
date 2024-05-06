@@ -1,25 +1,21 @@
 #!/bin/bash
 
-if [ ! -f "/var/www/html/wordpress/wp-config.php" ]; then
+if [ ! -f "/var/www/html/wordpress/wp-config.php" ];
+then
     cd /var/www/html/wordpress
     rm -rf /var/www/html/wordpress/*
-
     wp core download --allow-root
 
-    wp config create --allow-root \
-        --dbname=${MYSQL_DATABASE} \
-        --dbuser=${MYSQL_USER_NAME} \
-        --dbpass=${MYSQL_USER_PASSWORD} \
-        --dbhost=mariadb
+    wp config create --allow-root --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=mariadb:3306
 
     wp core install --allow-root \
-        --url=${WORDPRESS_URL} \
-        --title=${WORDPRESS_TITLE} \
-        --admin_user=${WORDPRESS_ADMIN_NAME} \
-        --admin_password=${WORDPRESS_ADMIN_PASSWD} \
-        --admin_email=${WORDPRESS_ADMIN_EMAIL}
+        --url=esalim.42.fr \
+        --title="esalim-wp" \
+        --admin_user=esalim \
+        --admin_password=esalim \
+        --admin_email=esalim@gmail.com
 
-    wp user create "$MYSQL_USER_NAME" "$WORDPRESS_USER_EMAIL" \
+    wp user create "$MYSQL_USER_NAME" "esalim.42@gmail.com" \
         --role=editor \
         --user_pass=${MYSQL_USER_PASSWORD} \
         --path=/var/www/html/wordpress --allow-root

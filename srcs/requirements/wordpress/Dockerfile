@@ -14,6 +14,8 @@ EXPOSE  9000
 
 COPY    tools/docker-entrypoint-initdb.sh /
 
+RUN     chmod +x /docker-entrypoint-initdb.sh
+
 ENV MYSQL_ADMIN_PASSWORD=wordpress
 ENV MYSQL_DATABASE=wordpress
 ENV MYSQL_USER_NAME=wordpress
@@ -21,6 +23,6 @@ ENV MYSQL_USER_PASSWORD=wordpress
 
 ENTRYPOINT [ "sh", "/docker-entrypoint-initdb.sh" ]
 
-CMD     ["php-fpm8.2", "-f"]
+CMD     ["php-fpm8.2", "-F"]
 
 # CMD     ["yes"]
