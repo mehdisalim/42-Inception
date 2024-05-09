@@ -6,7 +6,11 @@ then
     rm -rf /var/www/html/wordpress/*
     wp core download --allow-root
 
-    wp config create --allow-root --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=mariadb:3306
+    wp config create --allow-root \
+                    --dbname=${MYSQL_DATABASE} \
+                    --dbuser=${MYSQL_USER_NAME} \
+                    --dbpass=${MYSQL_USER_PASSWORD} \
+                    --dbhost=${WORDPRESS_DB_HOST}
 
     wp core install --allow-root \
         --url=esalim.42.fr \

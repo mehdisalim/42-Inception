@@ -6,14 +6,14 @@ services:
     container_name: mariadb
     build:
       context: requirements/mariadb
-    environment:
-      MYSQL_TCP_PORT: 3306
-      MYSQL_ROOT_PASSWORD: wordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+    restart: on-failure
+    env_file:
+      - path: .env
+
     ports:
       - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
     networks:
       - inception-networks
 
@@ -21,24 +21,23 @@ services:
     container_name: wordpress
     build:
       context: requirements/wordpress
+    restart: on-failure
     volumes:
       - wordpress_data:/var/www/html/wordpress
-    environment:
-      MYSQL_TCP_PORT: 3306
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
+    env_file:
+      - path: .env
     ports:
       - "9000:9000"
     depends_on:
       - mariadb
     networks:
       - inception-networks
+    
   nginx:
     container_name: nginx_v1
     build:
       context: requirements/nginx
+    restart: on-failure
     volumes:
       - wordpress_data:/var/www/html/wordpress
     ports:
@@ -50,8 +49,18 @@ services:
 
 networks:
   inception-networks:
-    driver: bridge
-    name: inception-networks
 
 volumes:
+  mariadb_data:
+    name: "mariadb_data"
+    driver_opts:
+      type: none
+      o: bind
+      device: "$HOME/data/mariadb_data"
   wordpress_data:
+    name: "wordpress_data"
+
+    driver_opts:
+      type: none
+      o: bind
+      device: "$HOME/data/wordpress_data"
