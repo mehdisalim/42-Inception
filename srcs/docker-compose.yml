@@ -9,7 +9,8 @@ services:
     restart: on-failure
     env_file:
       - path: .env
-
+    # secrets:
+    #    - db_root_password
     ports:
       - "3306:3306"
     volumes:
@@ -26,6 +27,8 @@ services:
       - wordpress_data:/var/www/html/wordpress
     env_file:
       - path: .env
+    # secrets:
+    #    - db_root_password
     ports:
       - "9000:9000"
     depends_on:
@@ -34,10 +37,14 @@ services:
       - inception-networks
     
   nginx:
-    container_name: nginx_v1
+    container_name: nginx
     build:
       context: requirements/nginx
     restart: on-failure
+    env_file:
+      - path: .env
+    # secrets:
+    #    - db_root_password
     volumes:
       - wordpress_data:/var/www/html/wordpress
     ports:
@@ -59,8 +66,14 @@ volumes:
       device: "$HOME/data/mariadb_data"
   wordpress_data:
     name: "wordpress_data"
-
     driver_opts:
       type: none
       o: bind
       device: "$HOME/data/wordpress_data"
+
+
+# secrets:
+#   db_password:
+#     file: db_password.txt
+#   db_root_password:
+#     file: db_root_password.txt

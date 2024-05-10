@@ -13,13 +13,13 @@ then
                     --dbhost=${WORDPRESS_DB_HOST}
 
     wp core install --allow-root \
-        --url=esalim.42.fr \
-        --title="esalim-wp" \
-        --admin_user=esalim \
-        --admin_password=esalim \
-        --admin_email=esalim@gmail.com
+        --url=${DOMAIN_NAME} \
+        --title=${WORDPRESS_TITLE} \
+        --admin_user=${WORDPRESS_USER_NAME} \
+        --admin_password=${WORDPRESS_USER_PASSWORD} \
+        --admin_email=${USER_EMAIL}
 
-    wp user create "$MYSQL_USER_NAME" "esalim.42@gmail.com" \
+    wp user create "$MYSQL_USER_NAME" "$WORDPRESS_USER_EMAIL" \
         --role=editor \
         --user_pass=${MYSQL_USER_PASSWORD} \
         --path=/var/www/html/wordpress --allow-root
