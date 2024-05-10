@@ -7,9 +7,7 @@ RUN apt-get install -y mariadb-server
 RUN mkdir -p /var/run/mysqld
 RUN mkdir -p /var/lib/mysql
 
-
 RUN chmod 777 /var/run/mysqld /run/mysqld /var/lib/mysql
-
 
 COPY ./tools/docker-entrypoint-initdb.sh /
 

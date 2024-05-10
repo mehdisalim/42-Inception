@@ -7,7 +7,7 @@ WORKDIR	/etc/nginx
 
 RUN     mkdir ssl
 
-RUN     openssl req -x509 -trustout -sha256 -days 356 -nodes -newkey rsa:2048 -subj "/CN=${DOMAIN_NAME}/C=MA/L=Tetouan" -keyout ssl/server.key -out ssl/server.crt
+RUN     openssl req -x509 -trustout -sha256 -days 356 -nodes -newkey rsa:2048 -subj "/CN=${SSL_DOMAIN_NAME}/C=${SSL_COUNTRY_NAME}/L=${SSL_CITY_NAME}" -keyout ssl/server.key -out ssl/server.crt
 
 RUN		rm -rf conf.d/* sites-enabled/*
 
