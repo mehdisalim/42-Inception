@@ -4,6 +4,7 @@ if [ ! -f "/var/www/html/wordpress/wp-config.php" ];
 then
     cd /var/www/html/wordpress
     rm -rf /var/www/html/wordpress/*
+
     wp core download --allow-root
 
     wp config create --allow-root \
@@ -19,7 +20,7 @@ then
         --admin_password=${WORDPRESS_USER_PASSWORD} \
         --admin_email=${USER_EMAIL}
 
-    wp user create "$MYSQL_USER_NAME" "$WORDPRESS_USER_EMAIL" \
+    wp user create "$WORDPRESS_USER_NAME" "$WORDPRESS_USER_EMAIL" \
         --role=editor \
         --user_pass=${MYSQL_USER_PASSWORD} \
         --path=/var/www/html/wordpress --allow-root

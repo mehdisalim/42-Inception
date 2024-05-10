@@ -1,14 +1,15 @@
-version: "3.8"
-
 services:
 
   mariadb:
     container_name: mariadb
+    image: mariadb
     build:
       context: requirements/mariadb
-    restart: on-failure
+      dockerfile: Dockerfile
+
     env_file:
       - path: .env
+    restart: on-failure
     # secrets:
     #    - db_root_password
     ports:
@@ -20,8 +21,11 @@ services:
 
   wordpress:
     container_name: wordpress
+    image: wordpress
     build:
       context: requirements/wordpress
+      dockerfile: Dockerfile
+
     restart: on-failure
     volumes:
       - wordpress_data:/var/www/html/wordpress
@@ -38,9 +42,13 @@ services:
     
   nginx:
     container_name: nginx
+    image: nginx
     build:
       context: requirements/nginx
+      dockerfile: Dockerfile
+      
     restart: on-failure
+
     env_file:
       - path: .env
     # secrets:
@@ -64,6 +72,7 @@ volumes:
       type: none
       o: bind
       device: "$HOME/data/mariadb_data"
+
   wordpress_data:
     name: "wordpress_data"
     driver_opts:
