@@ -7,11 +7,14 @@ services:
       context: requirements/mariadb
       dockerfile: Dockerfile
 
+    restart: on-failure
+
     env_file:
       - path: .env
-    restart: on-failure
-    # secrets:
-    #    - db_root_password
+    secrets:
+      - mysql_user_password
+      - mysql_root_password
+
     ports:
       - "3306:3306"
     volumes:
@@ -29,10 +32,14 @@ services:
     restart: on-failure
     volumes:
       - wordpress_data:/var/www/html/wordpress
+
     env_file:
       - path: .env
-    # secrets:
-    #    - db_root_password
+    secrets:
+      - mysql_user_password
+      - wordpress_admin_password
+      - wordpress_user_password
+
     ports:
       - "9000:9000"
     depends_on:
@@ -51,8 +58,7 @@ services:
 
     env_file:
       - path: .env
-    # secrets:
-    #    - db_root_password
+
     volumes:
       - wordpress_data:/var/www/html/wordpress
     ports:
@@ -81,8 +87,12 @@ volumes:
       device: "$HOME/data/wordpress_data"
 
 
-# secrets:
-#   db_password:
-#     file: db_password.txt
-#   db_root_password:
-#     file: db_root_password.txt
+secrets:
+  mysql_root_password:
+    file: ../secrets/mysql_root_password
+  mysql_user_password:
+    file: ../secrets/mysql_user_password
+  wordpress_admin_password:
+    file: ../secrets/wordpress_admin_password
+  wordpress_user_password:
+    file: ../secrets/wordpress_user_password
