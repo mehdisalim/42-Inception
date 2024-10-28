@@ -46,7 +46,7 @@ Ensure you have the following installed:
     ```
 3. Build and start the containers:
     ```bash
-    make setup
+    make up
     ```
 4. To stop the containers:
     ```bash
